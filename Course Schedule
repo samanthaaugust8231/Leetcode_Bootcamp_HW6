@@ -1,0 +1,18 @@
+class Solution(object):
+    def canFinish(self, numCourses, prerequisites):
+        graph = defaultdict(list)
+        degree = [0] * numCourses
+
+        for course, prereq in prerequisites:
+            graph[prereq].append(course)
+            degree[course] += 1
+        queue = deque([course for course in range(numCourses) if degree[course] == 0])
+
+        while queue:
+            current_course = queue.popleft()
+            for neighbor in graph[current_course]:
+                degree[neighbor] -= 1
+                if degree[neighbor] == 0:
+                    queue.append(neighbor)
+
+        return sum(degree) == 0
